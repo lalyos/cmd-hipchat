@@ -1,11 +1,13 @@
 #!cmd alpine bash curl
 #!/bin/bash
 
-: ${HIPCHAT_TOKEN:?required}
-: ${HIPCHAT_ROOM:?required room id or name}
+[[ "$TRACE" ]] && set -x
 
+debug() {
+  [[ "$DEBUG" ]] && echo "-----> $*" 1>&2
+}
 
-getMessage() {
+json_message() {
   cat <<EOF
 {
   "from": "$USER",
@@ -14,14 +16,25 @@ getMessage() {
   "message": "$(cat | while read line;do echo -n $line \\n;done )"
 }
 EOF
-
 }
 
-[[ "$TRACE" ]] && set -x
+hipchat_msg() {
+  declare desc="Sends a text/html notification to a Hipchat room"
 
-curl -s \
-  -H "Content-type: application/json" \
-  -H "Authorization: Bearer $HIPCHAT_TOKEN" \
-  api.hipchat.com/v2/room/bottest/message \
-  -d "$(getMessage)"
+  debug "$desc"
+  curl -s \
+      -H "Content-type: application/json" \
+      -H "Authorization: Bearer $HIPCHAT_TOKEN" \
+      api.hipchat.com/v2/room/bottest/message \
+      -d "$(json_message)"
+}
+
+main() {
+  : ${HIPCHAT_TOKEN:?required}
+  : ${HIPCHAT_ROOM:?required room id or name}
+  
+  hipchat_msg
+}
+
+[[ "$0" == "$BASH_SOURCE" ]] && main "$@"
 
