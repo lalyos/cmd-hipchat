@@ -26,6 +26,10 @@ Load your configuration
 source .profile
 ```
 
+## Moar configs
+
+- HIPCHAT_MSG_COLOR: yellow, green, red, purple, gray
+- HIPCHAT_MSG_FORMAT: text/html
 ## Usage
 
 ```
