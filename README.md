@@ -1,4 +1,4 @@
-
+This is http://cmd.io hipchat command. You can pipe any text/command output into a hipchat room.
 
 ## Install
 
